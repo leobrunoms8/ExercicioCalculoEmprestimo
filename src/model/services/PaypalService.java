@@ -2,8 +2,8 @@ package model.services;
 
 public class PaypalService implements OnlinePaymentsService{
 	
-	private Double mounthlyInterest = 0.01;
-	private Double paymentTax = 0.02;
+	private static final double mounthlyInterest = 0.01;
+	private static final double paymentTax = 0.02;
 	
 	@Override
 	public double paymentFee(double amount) {

@@ -10,6 +10,9 @@ import model.entities.Installment;
 public class ContractService {
 	
 	private OnlinePaymentsService onlinePaymentSrevice;
+	
+	public ContractService() {
+		}
 
 	public ContractService(OnlinePaymentsService onlinePaymentSrevice) {
 		this.onlinePaymentSrevice = onlinePaymentSrevice;
@@ -17,10 +20,10 @@ public class ContractService {
 	
 	public void processContract(Contract contract, int mounths) {
 		double primaryQuota = contract.getTotalValue() / mounths; // Divide o valor do empréstimo pela quantidade de meses 
-		for (int i = 1; i<mounths; i++) {
+		for (int i = 1; i<=mounths; i++) {
 			Date date = addMonths(contract.getDate(), i);
-			double secundaryQuota = onlinePaymentSrevice.interest(primaryQuota, i);//Adiciona os Juros mensais ao valor da parcela primaria
-			double finalQuota = onlinePaymentSrevice.paymentFee(secundaryQuota);//Adiciona a Taxa 
+			double secundaryQuota = primaryQuota + onlinePaymentSrevice.interest(primaryQuota, i);//Adiciona os Juros mensais ao valor da parcela primaria
+			double finalQuota = secundaryQuota + onlinePaymentSrevice.paymentFee(secundaryQuota);//Adiciona a Taxa 
 			contract.addInstallment(new Installment(date, finalQuota));
 		}
 	}
